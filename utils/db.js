@@ -4,10 +4,6 @@ import mongodb from 'mongodb';
  * Represents a database client for connecting to MongoDB.
  */
 class DBClient {
-/**
- * Represents a database connection.
- * @constructor
- */
   constructor () {
     this.host = process.env.DB_HOST || 'localhost';
     this.port = process.env.DB_PORT || 27017;
@@ -50,4 +46,5 @@ class DBClient {
   }
 }
 
-module.exports = DBClient;
+export const dbClient = new DBClient()
+export default dbClient
