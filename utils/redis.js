@@ -1,60 +1,76 @@
-import { createClient } from "redis"
+import { createClient } from 'redis';
 
+/**
+ * Interaction with the redis db
+ */
 class RedisClient {
-    constructor() {
-        this.client = createClient();
-        this.isClientConnected = true
-        this.client.on('error', (error) => 
-                {console.log('could not create redis client')
-                this.isClientConnected = false
-            })
-        this.client.on('connect', () => {
-            this.isClientConnected = true
-        })
-    }
+  constructor() {
+    this.client = createClient();
+    this.isClientConnected = true;
+    this.client.on('error', (error) => {
+      console.log('could not create redis client', error);
+      this.isClientConnected = false;
+    });
+    this.client.on('connect', () => {
+      this.isClientConnected = true;
+    });
+  }
 
-    isAlive() {
-        return this.isClientConnected
-    }
+  /**
+     *
+     * @returns Boolean - true or false
+     */
+  isAlive() {
+    return this.isClientConnected;
+  }
 
-    async get(key) {
-        try {
-            const value = new Promise((resolve, reject) => {
-                this.client.get(key,  (error, val) => {
-                    if (error) {
-                        reject(error)
-                    } else {
-                        resolve(val)
-                    }
-                })
-            })
-
-            return value
-        } catch (error) {
-            throw error
+  /**
+     *
+     * @param {*} key - the key argument to which value will be retrived
+     * @returns
+     */
+  async get(key) {
+    const value = new Promise((resolve, reject) => {
+      this.client.get(key, (error, val) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(val);
         }
-    }
+      });
+    });
 
-    async set(key, value, duration) {
-        this.client.set(key, value, 'EX', duration, (error, reply) => {
-            if (error) {
-                console.error('Error: unable to set key to value')
-            } 
-            
-        })
-    }
+    return value;
+  }
 
-    async del(key) {
-        this.client.del(key, (error, reply) => {
-            if (error) {
-                console.error('Error: unable to delete value from key')
-            } else {
-                console.log('Success: value deleted from key')
-            }
-        })
-    }
+  /**
+     *
+     * @param {key to set the value} key
+     * @param {value in which key will be set to} value
+     * @param {expiration of the key} duration
+     */
+  async set(key, value, duration) {
+    this.client.set(key, value, 'EX', duration, (error, reply) => {
+      if (error) {
+        console.error('Error: unable to set key to value', reply);
+      }
+    });
+  }
 
+  /**
+     *
+     * @param {key which value will be deleted} key
+     */
+  async del(key) {
+    this.client.del(key, (error, reply) => {
+      if (error) {
+        console.error('Error: unable to delete value from key');
+      } else {
+        console.log('Success: value deleted from key', reply);
+      }
+    });
+  }
 }
 
-const redisClient = new RedisClient()
-export { redisClient }
+export const redisClient = new RedisClient();
+export default redisClient;
