@@ -4,7 +4,7 @@ import mongodb from 'mongodb';
  * Represents a database client for connecting to MongoDB.
  */
 class DBClient {
-  constructor () {
+  constructor() {
     this.host = process.env.DB_HOST || 'localhost';
     this.port = process.env.DB_PORT || 27017;
     this.database = process.env.DB_DATABASE || 'files_manager';
@@ -17,7 +17,7 @@ class DBClient {
  * Checks if the database connection is alive.
  * @returns {boolean} Returns true if the database connection is alive, otherwise false.
  */
-  isAlive () {
+  isAlive() {
     return this.client.isConnected();
   }
 
@@ -25,7 +25,7 @@ class DBClient {
    * Retrieves the number of users in the database.
    * @returns {Promise<Number>}
    */
-  async nbUsers () {
+  async nbUsers() {
     return this.client.db().collection('users').countDocuments();
   }
 
@@ -33,7 +33,7 @@ class DBClient {
    * Retrieves the number of files in the database.
    * @returns {Promise<Number>}
    */
-  async nbFiles () {
+  async nbFiles() {
     return this.client.db().collection('files').countDocuments();
   }
 
@@ -41,7 +41,7 @@ class DBClient {
    * Retrieves a reference to the `users` collection.
    * @returns {Promise<Collection>}
    */
-  async usersCollection () {
+  async usersCollection() {
     return this.client.db().collection('users');
   }
 }
