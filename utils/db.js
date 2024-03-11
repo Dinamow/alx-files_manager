@@ -1,11 +1,12 @@
 import mongodb from 'mongodb';
+import Collection from 'mongodb/lib/collection';
 
 /**
  * Represents a database client for connecting to MongoDB.
  */
 class DBClient {
   constructor() {
-    this.host = process.env.DB_HOST || 'localhost';
+    this.host = process.env.DB_HOST || '127.0.0.1';
     this.port = process.env.DB_PORT || 27017;
     this.database = process.env.DB_DATABASE || 'files_manager';
     this.url = `mongodb://${this.host}:${this.port}/${this.database}`;
