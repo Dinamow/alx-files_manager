@@ -23,12 +23,11 @@ class UsersController {
 
     try {
       // check if email already exists
-      dbClient.getUserByEmail(email)
-        .then((existingUser) => {
-          if (existingUser) {
-            res.status(400).json({ error: 'Already exists' });
-          }
-        });
+      const user = await (await dbClient.usersCollection()).findOne({ email });
+      if (user) {
+        res.status(400).json({ error: 'Already exists'})
+        return
+      }
 
       const sha1Password = createHash('sha1').update(password).digest('hex');
 
