@@ -4,7 +4,7 @@ import { createClient } from 'redis';
  * Interaction with the redis db
  */
 class RedisClient {
-  constructor() {
+  constructor () {
     this.client = createClient();
     this.isClientConnected = true;
     this.client.on('error', (error) => {
@@ -20,7 +20,7 @@ class RedisClient {
      *
      * @returns Boolean - true or false
      */
-  isAlive() {
+  isAlive () {
     return this.isClientConnected;
   }
 
@@ -29,7 +29,7 @@ class RedisClient {
      * @param {*} key - the key argument to which value will be retrived
      * @returns
      */
-  async get(key) {
+  async get (key) {
     const value = new Promise((resolve, reject) => {
       this.client.get(key, (error, val) => {
         if (error) {
@@ -49,7 +49,7 @@ class RedisClient {
      * @param {value in which key will be set to} value
      * @param {expiration of the key} duration
      */
-  async set(key, value, duration) {
+  async set (key, value, duration) {
     this.client.set(key, value, 'EX', duration, (error, reply) => {
       if (error) {
         console.error('Error: unable to set key to value', reply);
@@ -61,7 +61,7 @@ class RedisClient {
      *
      * @param {key which value will be deleted} key
      */
-  async del(key) {
+  async del (key) {
     this.client.del(key, (error, reply) => {
       if (error) {
         console.error('Error: unable to delete value from key');
