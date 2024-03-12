@@ -1,6 +1,7 @@
 import AppController from '../controllers/AppController';
 import UsersController from '../controllers/UsersController';
 import AuthController from '../controllers/AuthController';
+import FilesController from '../controllers/FilesController';
 /**
  * Injects routes with their handlers to the given Express application.
  * @param {Express} api
@@ -12,6 +13,7 @@ const injectRoutes = (api) => {
   api.get('/connect', AuthController.getConnect);
   api.get('/disconnect', AuthController.getDisconnect);
   api.get('/users/me', UsersController.getMe);
+  api.post('/files', FilesController.postUpload);
 };
 
 export default injectRoutes;
