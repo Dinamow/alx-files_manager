@@ -15,7 +15,7 @@ class AuthController {
 
       const credentials = decodeBase64(authHeader.replace('Basic ', ''));
       if (!credentials || !credentials.includes(':')) {
-        return res.status(401).json({ error: 'Invalid credentials format' });
+        return res.status(401).json({ error: 'Unauthorized' });
       }
 
       const [email, password] = credentials.split(':');
