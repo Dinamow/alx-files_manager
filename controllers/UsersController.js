@@ -40,7 +40,7 @@ class UsersController {
 
       const userId = insertionInfo.insertedId.toString();
       userQueue.add(userId);
-      res.status(201).json({ email, id: userId });
+      res.status(201).json({id: userId, email });
     } catch (error) {
       console.error('Error creating user', error);
       res.status(500).json({ error: 'internal server error' });
