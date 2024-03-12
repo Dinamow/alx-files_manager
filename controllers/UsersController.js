@@ -67,7 +67,7 @@ class UsersController {
         console.log(user)
         if (!user || !user._id) {
 
-            res.status(404).json({ error: `User(${user}) not found` });
+            res.status(401).json({ error: `Unauthorized` });
             return;
         }
 

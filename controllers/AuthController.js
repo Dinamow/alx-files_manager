@@ -62,7 +62,7 @@ class AuthController {
 
             if (!userId) {
                 console.log('user not found')
-                res.status(400).json({ error: 'Unauthorized'})
+                res.status(401).json({ error: 'Unauthorized'})
                 return;
             }
             redisClient.del(`auth_${token}`)
