@@ -65,8 +65,9 @@ class AuthController {
                 res.status(400).json({ error: 'Unauthorized'})
                 return;
             }
-            return redisClient.del(`auth_${token}`)
-            
+            redisClient.del(`auth_${token}`)
+            console.log('User signed out successfully');
+            return res.status(204).json({ message: 'User signed out successfully' });
             
         } catch(error) {
             console.log(error)
