@@ -1,6 +1,4 @@
-import mongodb from 'mongodb';
-import { ObjectId } from 'mongodb';
-
+import mongodb, { ObjectId } from 'mongodb';
 
 /**
  * Represents a database client for connecting to MongoDB.
@@ -51,18 +49,19 @@ class DBClient {
     try {
       if (email) {
         return this.client.db().collection('users').findOne({ email });
-      } 
+      }
     } catch (error) {
       console.error('Error while getting user');
       throw error;
     }
   }
+
   async getUserById(id) {
-    try{
+    try {
       const objectId = new ObjectId(id);
-      return this.client.db().collection('users').findOne({ _id: objectId })
-    } catch(error) {
-      console.log(error)
+      return this.client.db().collection('users').findOne({ _id: objectId });
+    } catch (error) {
+      console.log(error);
     }
   }
 }
