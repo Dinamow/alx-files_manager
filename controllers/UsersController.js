@@ -1,6 +1,8 @@
 import { createHash } from 'crypto';
 import Queue from 'bull/lib/queue';
 import dbClient from '../utils/db';
+import { redisClient } from '../utils/redis';
+
 // import { parseConnectionString } from "mongodb/lib/core";
 // import sha1 from 'sha1';
 
@@ -46,39 +48,33 @@ class UsersController {
   }
 
   static async getMe(req, res) {
-    const token = req.headers.authorization
-
-    if (!token) {
-        res.status(401).json({ error: 'Unauthorized' })
-    }
     try {
-        redidClient.get(`auth_${token}`, (error, userId) => {
-            if (error) {
-                res.status(500).json({ error: 'Internal server errror' })
-                return
-            }
+        const token = req.headers['x-token'];
+        console.log(token)
+        if (!token) {
+            res.status(401).json({ error: 'Unauthorized' });
+            return;
+        }
 
-            if (!userId) {
-                res.status(401).json({ error: 'Unauthorized' })
-                return
-            }
+        const userId = await redisClient.get(`auth_${token}`);
+        console.log(userId)
+        if (!userId) {
+            res.status(401).json({ error: 'Unauthorized' });
+            return;
+        }
 
-            try {
-                const user =  dbClient.getUserByEmail(userId);
+        const user = await dbClient.getUserById(userId);
+        console.log(user)
+        if (!user || !user._id) {
 
-                if (!user) {
-                    res.status(401).json({ error: 'Unauthorized' })
-                    return
-                }
+            res.status(404).json({ error: `User(${user}) not found` });
+            return;
+        }
 
-                res.status(200).json({ email: user.email, id: user.id })
-            } catch {
-                console.error('Error retrieving user')
-                res.status(500).json({ error: 'Internal server error' })
-            }
-        })
-    } catch {
-
+        res.status(200).json({ id: user._id, email: user.email });
+    } catch(error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 }
 }

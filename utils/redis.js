@@ -54,6 +54,7 @@ class RedisClient {
       if (error) {
         console.error('Error: unable to set key to value', reply);
       } 
+      console.log('set was successful')
     });
   }
 

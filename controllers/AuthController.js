@@ -10,6 +10,7 @@ class AuthController {
         try {
             const authHeader = req.headers.authorization;
             if (!authHeader || !authHeader.startsWith('Basic ')) {
+                console.log('failure on auth header')
                 return res.status(401).json({ error: 'Unauthorized' });
             }
 
@@ -22,6 +23,7 @@ class AuthController {
             const user = await dbClient.getUserByEmail(email);
 
             if (!user || user.password !== createHash('sha1').update(password).digest('hex')) {
+                console.log('failed to authenticate')
                 return res.status(401).json({ error: 'Unauthorized' });
             }
 
@@ -29,9 +31,12 @@ class AuthController {
             const key = `auth_${token}`;
 
             try {
-                await redisClient.set(key, user._id.toString(), 86400);
-                return res.status(200).json({ token });
+                await redisClient.set(key, user._id.toString(), 24 * 60 * 60);
+                console.log('after saving to redis')
+                res.status(200).json({ token } );
+                return
             } catch(error) {
+                console.log(error)
                 console.error(error)
 
             }
@@ -43,36 +48,28 @@ class AuthController {
 
 
     static async getDisconnect(req, res) {
-        const token = req.headers.authorization
 
-        if (!token) {
-            res.status(401).json({ error: 'Unauthorized' })
-            return
-        }
 
         try {
-            redisClient.get(`auth_${token}`, (error, userId) => {
-                if (error) {
-                    res.status(500).json({ error: 'Internal server error'})  
-                    return  
-                }
+            const token = req.headers['x-token']
+            console.log(token)
+            if (!token) {
+                console.log('token not found')
+                res.status(401).json({ error: 'Unauthorized' })
+                return
+            }
+            const userId = await redisClient.get(`auth_${token}`);
 
-                if (!userId) {
-                    res.status(401).json({ error: 'Unauthorized' })
-                    return
-                }
-
-                redisClient.del(`auth_${token}`, (error) => {
-                    if (error) {
-                        res.status(401).json({ error: 'Unauthorized'})
-                        return
-                    }
-
-                    res.status(204).json({ message: 'User signed out successfully'})
-                })
-            })
-        } catch {
-
+            if (!userId) {
+                console.log('user not found')
+                res.status(400).json({ error: 'Unauthorized'})
+                return;
+            }
+            return redisClient.del(`auth_${token}`)
+            
+            
+        } catch(error) {
+            console.log(error)
         }
     }
 }
