@@ -9,7 +9,7 @@ import { redisClient } from '../utils/redis';
 const userQueue = new Queue('email sending');
 
 class UsersController {
-  static async postNew(req, res) {
+  static async postNew (req, res) {
     const { email, password } = req.body || {};
 
     // check if email and password are present
@@ -35,7 +35,7 @@ class UsersController {
 
       const insertionInfo = await (await dbClient.usersCollection()).insertOne({
         email,
-        password: sha1Password,
+        password: sha1Password
       });
 
       const userId = insertionInfo.insertedId.toString();
@@ -47,7 +47,7 @@ class UsersController {
     }
   }
 
-  static async getMe(req, res) {
+  static async getMe (req, res) {
     try {
       const token = req.headers['x-token'];
       console.log(token);

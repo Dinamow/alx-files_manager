@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
-
 export const getAuthHeader = (req) => {
   const header = req.headers.authorization;
   // if header does not exist
@@ -17,6 +15,6 @@ export const decodeToken = (token) => {
   return decodedToken;
 };
 
-export function decodeBase64(encodedString) {
+export function decodeBase64 (encodedString) {
   return Buffer.from(encodedString, 'base64').toString('utf-8');
 }

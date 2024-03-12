@@ -1,11 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 import { createHash } from 'crypto';
-import { getAuthHeader, decodeBase64 } from '../utils/utils';
+import { decodeBase64 } from '../utils/utils';
 import redisClient from '../utils/redis';
 import dbClient from '../utils/db';
 
 class AuthController {
-  static async getConnect(req, res) {
+  static async getConnect (req, res) {
     try {
       const authHeader = req.headers.authorization;
       if (!authHeader || !authHeader.startsWith('Basic ')) {
@@ -33,7 +33,6 @@ class AuthController {
         await redisClient.set(key, user._id.toString(), 24 * 60 * 60);
         console.log('after saving to redis');
         res.status(200).json({ token });
-        return;
       } catch (error) {
         console.log(error);
         console.error(error);
@@ -44,7 +43,7 @@ class AuthController {
     }
   }
 
-  static async getDisconnect(req, res) {
+  static async getDisconnect (req, res) {
     try {
       const token = req.headers['x-token'];
       console.log(token);
