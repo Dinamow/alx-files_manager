@@ -53,7 +53,7 @@ class RedisClient {
     this.client.set(key, value, 'EX', duration, (error, reply) => {
       if (error) {
         console.error('Error: unable to set key to value', reply);
-      }
+      } 
     });
   }
 

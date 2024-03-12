@@ -44,6 +44,43 @@ class UsersController {
       res.status(500).json({ error: 'internal server error' });
     }
   }
+
+  static async getMe(req, res) {
+    const token = req.headers.authorization
+
+    if (!token) {
+        res.status(401).json({ error: 'Unauthorized' })
+    }
+    try {
+        redidClient.get(`auth_${token}`, (error, userId) => {
+            if (error) {
+                res.status(500).json({ error: 'Internal server errror' })
+                return
+            }
+
+            if (!userId) {
+                res.status(401).json({ error: 'Unauthorized' })
+                return
+            }
+
+            try {
+                const user =  dbClient.getUserByEmail(userId);
+
+                if (!user) {
+                    res.status(401).json({ error: 'Unauthorized' })
+                    return
+                }
+
+                res.status(200).json({ email: user.email, id: user.id })
+            } catch {
+                console.error('Error retrieving user')
+                res.status(500).json({ error: 'Internal server error' })
+            }
+        })
+    } catch {
+
+    }
+}
 }
 
 export default UsersController;

@@ -45,11 +45,15 @@ class DBClient {
     return this.client.db().collection('users');
   }
 
-  async getUserByEmail(email) {
+  async getUserByEmail(email=null, id=null) {
     try {
-      return this.client.db().collection('users').findOne({ email });
+      if (email) {
+        return this.client.db().collection('users').findOne({ email });
+      } else if (id) {
+        return this.client.db().collection('users').findOne({ id })
+      }
     } catch (error) {
-      console.error('Error while getting user', email);
+      console.error('Error while getting user');
       throw error;
     }
   }
