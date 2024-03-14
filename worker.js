@@ -72,7 +72,6 @@ userQueue.process(async (job) => {
 
   console.log(`Welcome ${user.email}!`);
 });
-=======
 /* eslint no-console: off */
 import Queue from 'bull';
 import { ObjectId } from 'mongodb';
@@ -80,8 +79,8 @@ import generateThumbnail from './utils/thumbnails';
 import UsersCollection from './utils/users';
 import FilesCollection from './utils/files';
 
-const fileQueue = Queue('thumbnail generation');
-const userQueue = Queue('send welcome email');
+fileQueue = Queue('thumbnail generation');
+userQueue = Queue('send welcome email');
 
 // Thumbnail jobs consumer
 fileQueue.process(10, async (job) => {
@@ -122,4 +121,4 @@ userQueue.process(20, async (job) => {
 userQueue.on('completed', (_job, result) => {
   console.log(result);
 });
->>>>>>> task6
+
