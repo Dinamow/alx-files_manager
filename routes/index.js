@@ -1,24 +1,14 @@
-import AppController from '../controllers/AppController';
-import UsersController from '../controllers/UsersController';
-import AuthController from '../controllers/AuthController';
-import FilesController from '../controllers/FilesController';
-/**
- * Injects routes with their handlers to the given Express application.
- * @param {Express} api
- */
-const injectRoutes = (api) => {
-  api.get('/status', AppController.getStatus);
-  api.get('/stats', AppController.getStats);
-  api.post('/users', UsersController.postNew);
-  api.get('/connect', AuthController.getConnect);
-  api.get('/disconnect', AuthController.getDisconnect);
-  api.get('/users/me', UsersController.getMe);
-  api.post('/files', FilesController.postUpload);
-  api.get('/files/:id', FilesController.getShow);
-  api.get('/files', FilesController.getIndex);
-  api.put('/files/:id/publish', FilesController.putPublish);
-  api.put('/files/:id/unpublish', FilesController.putUnpublish);
-  api.get('/files/:id/data', FilesController.getFile);
-};
+import { Router } from 'express';
+import appRouter from './app';
+import authRouter from './auth';
+import usersRouter from './users';
+import filesRouter from './files';
 
-export default injectRoutes;
+// App router
+const router = Router();
+router.use(appRouter);
+router.use(authRouter);
+router.use(usersRouter);
+router.use(filesRouter);
+
+export default router;

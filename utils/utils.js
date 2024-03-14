@@ -18,3 +18,4 @@ export const decodeToken = (token) => {
 export function decodeBase64 (encodedString) {
   return Buffer.from(encodedString, 'base64').toString('utf-8');
 }
+
